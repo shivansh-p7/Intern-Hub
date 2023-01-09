@@ -1,5 +1,6 @@
-const collegeModel = require("../models/collegeModel");
+
 const CollegeModel = require("../models/collegeModel");
+const internModel = require("../models/internModel");
 const InterModel = require("../models/internModel");
 const { isValidName, isValidUrl } = require("../validators/validators")
 
@@ -37,4 +38,43 @@ const createCollege = async(req, res) => {
     }
 }
 
-module.exports = { createCollege };
+//=================================================================Get API : getcollegedata=======================================
+
+
+const getCollegeData = async function (req, res) {
+ try {
+
+      const collegeName = req.query.collegeName
+      if(!collegeName) return res.status(400).send({status:false, message:"Please enter college Name"})
+
+
+      let collegeDetails = await CollegeModel.findOne({name:collegeName, isDeleted:false}).select({ name:1, fullName:1,logoLink:1})
+
+      let internsDetails= await internModel.find({collegeId:collegeDetails._id,isDeleted:false}).select({name:1, email:1, mobile:1})
+         console.log(internsDetails)
+
+         let obj  = {
+          name : collegeDetails.name,
+          fullName :collegeDetails.fullName,
+          logoLink : collegeDetails.logoLink,
+          interns : internsDetails
+
+         }
+        
+       return res.status(200).send({status:true , Data: obj})
+
+
+
+     
+    
+ } catch (error) {
+
+    return res.status(500).send({ status: false, message: error.message })
+
+ }
+
+
+
+}
+
+module.exports = { createCollege , getCollegeData};
