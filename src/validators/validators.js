@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 
 
-//__________________________ Validations : Shortname ___________________________________________
 
-const isValidShortname = function (name) {
-  const fnameShortRegex = /^[a-z]*$/;
-  return fnameShortRegex.test(name);
-};
 
 //__________________________ Validations : Name ___________________________________________
 
@@ -58,7 +53,7 @@ module.exports = {
   isValidLink,
   isValidMobileNumber,
   isValidObjectId,
-  isValidShortname,
+  
   isValidFullName
 };
 
