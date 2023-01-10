@@ -1,7 +1,7 @@
 
 const CollegeModel = require("../models/collegeModel");
 const InternModel = require("../models/internModel");
-const { isValidName, isValidUrl } = require("../validators/validators")
+const { isValidName, isValidUrl,isValidFullName } = require("../validators/validators")
 
 const createCollege = async(req, res) => {
     try {
@@ -15,18 +15,18 @@ const createCollege = async(req, res) => {
         let validName = isValidName(name)
         if (!validName) return res.status(400).send({ status: false, message: "Name can contain only letters " })
 
-        if (!fullName) return res.status(400).send({ status: false, message: "fullName is required" })
-        let validFullName = isValidName(fullName)
+        if (!fullName) return res.status(400).send({ status: false, message: "FullName is required" })
+        let validFullName = isValidFullName(fullName)
         if (!validFullName) return res.status(400).send({ status: false, message: "FullName can contain only letters " })
 
 
-        if (!logoLink) return res.status(400).send({ status: false, message: "logoLink is required" })
+        if (!logoLink) return res.status(400).send({ status: false, message: "LogoLink is required" })
         let validLogoName = isValidUrl(logoLink)
         if (!validLogoName) return res.status(400).send({ status: false, message: "Link is not valid " })
 
         let collegeExist = await CollegeModel.findOne({ $or: [{ fullName: fullName }, { name: name }] }).select({ fullName: 1, name: 1, _id: 0 })
 
-        if (collegeExist) return res.status(400).send({ status: false, message: "College already exist with this name ", data: collegeExist })
+        if (collegeExist) return res.status(404).send({ status: false, message: "College already exist with this name ", data: collegeExist })
         let collegeDetails = await CollegeModel.create(data);
 
 
@@ -45,23 +45,29 @@ const getCollegeData = async function (req, res) {
 
       const collegeName = req.query.collegeName
       if(!collegeName) return res.status(400).send({status:false, message:"Please enter college Name"})
-    
+      let validCollegeName = isValidName(collegeName)
+      if (!validCollegeName) return res.status(400).send({ status: false, message: "CollegeName can contain only letters " })
 
       let collegeDetails = await CollegeModel.findOne({name:collegeName, isDeleted:false}).select({ name:1, fullName:1,logoLink:1})
       if(!collegeDetails) return res.status(404).send({status:false, message:"college doesn't exist with this name"})
 
-      let internsDetails= await InternModel.find({collegeId:collegeDetails._id,isDeleted:false}).select({name:1, email:1, mobile:1})
-         console.log(internsDetails)
+      let obj  = {
+        name : collegeDetails.name,
+        fullName :collegeDetails.fullName,
+        logoLink : collegeDetails.logoLink,
+        }
 
-         let obj  = {
-          name : collegeDetails.name,
-          fullName :collegeDetails.fullName,
-          logoLink : collegeDetails.logoLink,
-          interns : internsDetails
-
-         }
         
-       return res.status(200).send({status:true , Data: obj})
+      let internsDetails= await InternModel.find({collegeId:collegeDetails._id,isDeleted:false}).select({name:1, email:1, mobile:1})
+        if(internsDetails.length===0){
+           obj.interns="No interns applied for this college"
+        }
+      else  {
+      obj.interns=internsDetails
+    }
+        
+   
+        return res.status(200).send({status:true , Data: obj})
 
 
 
