@@ -1,6 +1,5 @@
 const CollegeModel = require("../models/collegeModel");
-const internModel = require("../models/internModel");
-const InterModel = require("../models/internModel");
+const InternModel = require("../models/internModel");
 const { isValidEmail, isValidMobileNumber, isValidName } = require("../validators/validators")
 
 
@@ -20,13 +19,13 @@ const createIntern = async(req, res) => {
         if (!email) return res.status(400).send({ status: false, message: "Email is required" })
         let validEmail = isValidEmail(email)
         if (!validEmail) return res.status(400).send({ status: false, message: "Enter a valid email " })
-        let emailExist = await internModel.findOne({ email: email, isDeleted: false })
+        let emailExist = await InternModel.findOne({ email: email, isDeleted: false })
         if (emailExist) return res.status(400).send({ status: false, message: "email already exist  " })
 
         if (!mobile) return res.status(400).send({ status: false, message: "Mobile number is required" })
         let validMobile = isValidMobileNumber(mobile)
         if (!validMobile) return res.status(400).send({ status: false, message: "Enter a valid mobile number " })
-        let mobileExist = await internModel.findOne({ mobile: mobile, isDeleted: false })
+        let mobileExist = await InternModel.findOne({ mobile: mobile, isDeleted: false })
         if (mobileExist) return res.status(400).send({ status: false, message: "Mobile number already exist  " })
 
         if (!collegeName) return res.status(400).send({ status: false, message: " college name is required  " })
@@ -34,10 +33,10 @@ const createIntern = async(req, res) => {
         let collegeDetails = await CollegeModel.findOne({ name: collegeName, isDeleted: false })
         data.collegeId = collegeDetails._id
 
-        if (!collegeDetails) return res.status(400).send({ status: false, message: " college does not exist with this name  " })
+        if (!collegeDetails) return res.status(404).send({ status: false, message: " college does not exist with this name  " })
 
-        let interDetails = await InterModel.create(data);
-        return res.status(201).send({ status: true, data: interDetails });
+        let internDetails = await InternModel.create(data);
+        return res.status(201).send({ status: true, data: internDetails });
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
 
