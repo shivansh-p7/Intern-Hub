@@ -1,8 +1,13 @@
 
 const CollegeModel = require("../models/collegeModel");
 const InternModel = require("../models/internModel");
+const axios=require("axios")
 const { isValidName, isValidUrl,isValidFullName } = require("../validators/validators")
 
+
+
+
+//=================================================================post API : createCollegeData=======================================
 const createCollege = async(req, res) => {
     try {
         let data = req.body;
@@ -23,6 +28,20 @@ const createCollege = async(req, res) => {
         if (!logoLink) return res.status(400).send({ status: false, message: "LogoLink is required" })
         let validLogoName = isValidUrl(logoLink)
         if (!validLogoName) return res.status(400).send({ status: false, message: "Link is not valid " })
+        let urlfound = false;
+        // let url = { method: 'get', url: logoLink };
+      
+        await axios.get(logoLink)
+        .then((result) => {
+        if ( result.status == 201 || result.status == 200 )
+            urlfound = true;
+        })
+        .catch((err) => {});
+      
+        if (urlfound == false) return res.status(400).send({ status: false, message: "Link is not valid " })
+
+
+
 
         let collegeExist = await CollegeModel.findOne({ $or: [{ fullName: fullName }, { name: name }] }).select({ fullName: 1, name: 1, _id: 0 })
 
@@ -62,16 +81,11 @@ const getCollegeData = async function (req, res) {
         if(internsDetails.length===0){
            obj.interns="No interns applied for this college"
         }
-      else  {
+         else {
       obj.interns=internsDetails
-    }
-        
+       }
    
         return res.status(200).send({status:true , Data: obj})
-
-
-
-     
     
  } catch (error) {
 

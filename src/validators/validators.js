@@ -7,8 +7,8 @@ const mongoose = require("mongoose");
 
 const isValidName = function(name) {
     name = name.trim()
-    const fnameRegex = /^[a-zA-Z]*$/;
-    return fnameRegex.test(name);
+    const nameRegex = /^[a-z]*$/;
+    return nameRegex.test(name);
 };
 
 //__________________________ Validations : FullName ___________________________________________
@@ -16,7 +16,7 @@ const isValidName = function(name) {
 
 const isValidFullName = function(fullName) {
     fullName = fullName.trim().replace(/\s+/g, ' ')
-    const fnameRegex = /^[a-z, A-Z][a-z, A-Z ]*$/;
+    const fnameRegex = /^[a-z, A-Z]*$/;
     return fnameRegex.test(fullName);
 };
 //__________________________ Validations : Email  ___________________________________________
@@ -35,7 +35,7 @@ const isValidUrl = function(link) {
 //__________________________ Validations : MobileNumber  ___________________________________________
 
 const isValidMobileNumber = function(mobile) {
-    const MobileNumberRegex = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+    const MobileNumberRegex = /^[6-9]\d{9}$/;
     return MobileNumberRegex.test(mobile);
 };
 

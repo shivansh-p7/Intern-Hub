@@ -1,6 +1,6 @@
 const CollegeModel = require("../models/collegeModel");
 const InternModel = require("../models/internModel");
-const { isValidEmail, isValidMobileNumber, isValidName } = require("../validators/validators")
+const { isValidEmail, isValidMobileNumber, isValidFullName } = require("../validators/validators")
 
 
 const createIntern = async(req, res) => {
@@ -12,7 +12,7 @@ const createIntern = async(req, res) => {
 
 
         if (!name) return res.status(400).send({ status: false, message: "Name is required" })
-        let validName = isValidName(name)
+        let validName = isValidFullName(name)
         if (!validName) return res.status(400).send({ status: false, message: "Name can contain only letters " })
 
 
@@ -22,6 +22,7 @@ const createIntern = async(req, res) => {
         let emailExist = await InternModel.findOne({ email: email, isDeleted: false })
         if (emailExist) return res.status(400).send({ status: false, message: "email already exist  " })
 
+        
         if (!mobile) return res.status(400).send({ status: false, message: "Mobile number is required" })
         let validMobile = isValidMobileNumber(mobile)
         if (!validMobile) return res.status(400).send({ status: false, message: "Enter a valid mobile number " })
