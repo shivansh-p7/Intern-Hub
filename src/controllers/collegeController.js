@@ -8,7 +8,7 @@ const { isValidName, isValidUrl,isValidFullName } = require("../validators/valid
 
 
 //=================================================================post API : createCollegeData=======================================
-const createCollege = async(req, res) => {
+const createCollege = async (req, res) => {
     try {
         let data = req.body;
 
@@ -31,14 +31,14 @@ const createCollege = async(req, res) => {
         let urlfound = false;
         // let url = { method: 'get', url: logoLink };
       
-        await axios.get(logoLink)
-        .then((result) => {
-        if ( result.status == 201 || result.status == 200 )
-            urlfound = true;
-        })
-        .catch((err) => {});
+        // await axios.get(logoLink)
+        // .then((result) => {
+        // if ( result.status == 201 || result.status == 200 )
+        //     urlfound = true;
+        // })
+        // .catch((err) => {});
       
-        if (urlfound == false) return res.status(400).send({ status: false, message: "Link is not valid " })
+        // if (urlfound == false) return res.status(400).send({ status: false, message: "Link is not valid " })
 
 
 

@@ -32,9 +32,10 @@ const createIntern = async(req, res) => {
         if (!collegeName) return res.status(400).send({ status: false, message: " college name is required  " })
 
         let collegeDetails = await CollegeModel.findOne({ name: collegeName, isDeleted: false })
+        if (!collegeDetails) return res.status(404).send({ status: false, message: " college does not exist with this name"})
         data.collegeId = collegeDetails._id
 
-        if (!collegeDetails) return res.status(404).send({ status: false, message: " college does not exist with this name  " })
+       
 
         let internDetails = await InternModel.create(data);
         return res.status(201).send({ status: true, data: internDetails });

@@ -1,10 +1,12 @@
 const express= require("express");
-const {default:mongosee}=require("mongoose");
+const {default:mongosee, default: mongoose}=require("mongoose");
 const app= express();
 const route=require("./routes/route")
 
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
+mongoose.set({"strictQuery":false})
 mongosee.connect("mongodb+srv://shivanshsharma:76Xjx6fMmlcP51HZ@shivansh-p7.zwfahec.mongodb.net/group16Database",{useNewUrlParser: true})
 
 .then( ()=>console.log("MongoDB is connected"))
