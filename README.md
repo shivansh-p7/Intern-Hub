@@ -1,113 +1,133 @@
-# Open-To-Intern
-Key points
+# College Internship Portal Backend (Node.js)
 
-Create a group database groupXDatabase. You can clean the db you previously used and resue that.
-This time each group should have a single git branch. Coordinate amongst yourselves by ensuring every next person pulls the code last pushed by a team mate. You branch will be checked as part of the demo. Branch name should follow the naming convention project/internshipGroupX
-Follow the naming conventions exactly as instructed. The backend code will be integrated with the front-end application which means any mismatch in the expected request body will lead to failure in successful integration.
+Welcome to the College Internship Portal backend! This repository contains the backend code for an application that allows users to register, colleges to register, and users to find colleges and apply for internships. This README file will guide you through the installation, usage, and API documentation of the backend.
 
+## Table of Contents
 
-Models
+- [System Overview](#system-overview)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
-College Model
-{ name: { mandatory, unique, example iith}, fullName: {mandatory, example `Indian Institute of Technology, Hyderabad`}, logoLink: {mandatory}, isDeleted: {boolean, default: false} }
+## System Overview
 
+The College Internship Portal backend is built using Node.js, a popular JavaScript runtime environment. It utilizes Express.js, a web application framework, to handle HTTP requests and provide the necessary endpoints for user and college registration, college search, and internship applications.
 
-Intern Model
-{ name: {mandatory}, email: {mandatory, valid email, unique}, mobile: {mandatory, valid mobile number, unique}, collegeId: {ObjectId, ref to college model, isDeleted: {boolean, default: false}}
+The system includes the following features:
 
+- **User Registration**: Users can register by providing their personal information such as name, email, and password.
 
-POST /functionup/colleges
-Create a college - a document for each member of the group
+- **College Registration**: Colleges can register by providing their name, location, website, and other relevant details.
 
-The logo link will be provided to you by the mentors. This link is a s3 (Amazon's Simple Service) url. Try accessing the link to see if the link is public or not.
+- **College Search**: Users can search for colleges based on various criteria such as location, field of study, and internship availability.
 
-Endpoint: BASE_URL/functionup/colleges
+- **Internship Applications**: Users can apply for internships offered by colleges by submitting their application and relevant information.
 
-POST /functionup/interns
-Create a document for an intern.
+## Installation
 
-Also save the collegeId along with the document. Your request body contains the following fields - { name, mobile, email, collegeName}
+To install and run the College Internship Portal backend, follow these steps:
 
-Return HTTP status 201 on a succesful document creation. Also return the document. The response should be a JSON object like this
+1. Ensure you have [Node.js](https://nodejs.org) installed on your system.
 
-Return HTTP status 400 for an invalid request with a response body like this
+2. Clone the repository to your local machine:
 
+   ```shell
+   git clone <repository-url>
+   ```
 
-GET /functionup/collegeDetails
-Returns the college details for the requested college (Expect a query parameter by the name collegeName. This is anabbreviated college name. For example iith)
-Returns the list of all interns who have applied for internship at this college.
-The response structure should look like this
-Testing
-To test these apis create a new collection in Postman named Project 2 Internship
-Each api should have a new request in this collection
-Each request in the collection should be rightly named. Eg Create college, Get college details etc
-Each member of each team should have their tests in running state
-Refer below sample
+3. Navigate to the project directory:
 
+   ```shell
+   cd college-internship-portal-backend
+   ```
 
-A Postman collection and request sample
+4. Install the dependencies using npm:
 
-Response
-Successful Response structure
-{
-  status: true,
-  data: {
+   ```shell
+   npm install
+   ```
 
-  }
-}
-Error Response structure
-{
-  status: false,
-  message: ""
-}
-Collections samples
-College
-{
-    "name" : "iith",
-    "fullName" : "Indian Institute of Technology, Hyderabad",
-    "logoLink" : "https://functionup.s3.ap-south-1.amazonaws.com/colleges/iith.png",
-    "isDeleted" : false
-}
-Intern
-   {
-    "isDeleted" : false,
-    "name" : "Jane Does",
-    "email" : "jane.doe@iith.in",
-    "mobile" : "90000900000",
-    "collegeId" : ObjectId("888771129c9ea621dc7f5e3b")
-}
-Response samples
-College details
-{
-  "data": {
-    "name": "xyz",
-    "fullName": "Some Institute of Engineering and Technology",
-    "logoLink": "some public s3 link for a college logo",
-    "interns": [
-      {
-        "_id": "123a47301a53ecaeea02be59",
-        "name": "Jane Doe",
-        "email": "jane.doe@miet.ac.in",
-        "mobile": "8888888888"
-      },
-      {
-        "_id": "45692c0e1a53ecaeea02b1ac",
-        "name": "John Doe",
-        "email": "john.doe@miet.ac.in",
-        "mobile": "9999999999"
-      },
-      {
-        "_id": "7898d0251a53ecaeea02a623",
-        "name": "Sukruti",
-        "email": "dummy.email@miet.ac.in",
-        "mobile": "9191919191"
-      },
-      {
-        "_id": "999803da1a53ecaeea02a07e",
-        "name": "Neeraj Kumar",
-        "email": "another.example@miet.ac.in",
-        "mobile": "9898989898"
-      }
-    ]
-  }
-}
+5. Configure the environment variables. Create a `.env` file in the root directory of the project and set the following variables:
+
+   ```dotenv
+   PORT=<port-number>
+   DATABASE_URL=<database-url>
+   ```
+
+   Replace `<port-number>` with the desired port number for the server, and `<database-url>` with the URL for your database.
+
+6. Run the server:
+
+   ```shell
+   npm start
+   ```
+
+   The server will start running on the specified port.
+
+## Usage
+
+Once the server is up and running, you can use a tool like [Postman](https://www.postman.com) or any HTTP client to interact with the College Internship Portal backend.
+
+Here are some sample use cases:
+
+- **User Registration**
+  - Register a new user by sending a POST request to `/api/users/register` with the required user details in the request body.
+
+- **College Registration**
+  - Register a new college by sending a POST request to `/api/colleges/register` with the required college details in the request body.
+
+- **College Search**
+  - Get a list of colleges by sending a GET request to `/api/colleges`.
+  - Search for colleges based on specific criteria by sending a GET request to `/api/colleges/search` with the desired search parameters.
+
+- **Internship Applications**
+  - Apply for an internship by sending a POST request to `/api/internships/apply` with the required application details in the request body.
+
+Feel free to explore the available API endpoints documented below for more information on the available routes and request/response formats.
+
+## API Documentation
+
+### User Registration
+
+- `POST /api/users/register`: Register a new user.
+
+### College Registration
+
+- `POST /api/colleges/register`: Register a new college.
+
+### College Search
+
+- `GET /api/colleges`:
+- Retrieve a list of all colleges.
+
+- `GET /api/colleges/search`: Search for colleges based on specific criteria.
+
+### Internship Applications
+
+- `POST /api/internships/apply`: Apply for an internship.
+
+Please refer to the API documentation or consult the codebase for further details on request/response formats, authentication requirements, and available endpoints.
+
+## Contributing
+
+Contributions to the College Internship Portal backend are welcome! If you'd like to contribute, please follow these steps:
+
+1. Fork the repository.
+
+2. Create a new branch for your feature or bug fix.
+
+3. Make your changes and commit them with descriptive commit messages.
+
+4. Push your changes to your forked repository.
+
+5. Submit a pull request, detailing the changes you've made and providing any necessary information or context.
+
+## License
+
+The College Internship Portal backend is released under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use, modify, and distribute the code as per the terms of the license.
+
+---
+
+Thank you for using the College Internship Portal backend! If you have any questions or need assistance, please don't hesitate to reach out. Happy coding!
